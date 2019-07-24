@@ -1,0 +1,63 @@
+<div class="container">
+        <h1 class="text-center mt-5">
+            Search a restaurant
+        </h1>
+    
+        <form #restaurantForm="ngForm" (ngSubmit)="submit()">
+                <div class="form-group">
+                  <label for="city">Enter city</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [class.is-invalid] ="city.invalid && city.touched"
+                    name="city" 
+                    #city="ngModel" 
+                    id="city" 
+                    placeholder="Example Toronto" 
+                    [(ngModel)]="cityName"
+                    minlength="3"
+                    required
+                    aria-describedby="cityHelpBlock">
+                    <div *ngIf="city.invalid && city.touched" class="text-danger">
+                        <small *ngIf="city.errors.required">Please enter a city</small>
+                        <small *ngIf="city.errors.minlength">Please enter minimum 3 characters</small>
+                    </div>
+                    <small id="cityHelpBlock" class="form-text text-muted">
+                            City must be 3 characters long.
+                    </small>
+                </div>
+             
+                <input class="btn btn-primary" type ="submit" value="Submit" [disabled]="restaurantForm.invalid">
+              </form>
+            <div class="alert alert-danger" *ngIf="errorMessage">
+                {{errorMessage}}
+            </div>
+            <div *ngIf="formSubmitted && restaurantsList.length > 0; then showRestaurantsList; else showErrorMessage"></div>
+            <ng-template #showRestaurantsList>
+                <h5 class="text-info text-center mb-2" role="alert">List of restaurants in {{cityName}}</h5>
+                    <table class="table table-hover mt-2" tabindex="-1">
+                            <thead>
+                              <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Price</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let restaurant of restaurantsList ; index as i">
+                                <th scope="row">{{i +1 }}</th>
+                                <td>{{restaurant.name}}</td>
+                                <td>{{restaurant.address +','+ restaurant.city +','+ restaurant.state +','+ restaurant.area +','+restaurant.country +','+restaurant.postal_code}}</td>
+                                <td>{{restaurant.price}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+            </ng-template>
+            <ng-template #showErrorMessage>
+                    <div *ngIf="formSubmitted" class="alert alert-danger mt-2" role="alert">
+                         "Sorry, we are not able to find any records for this city, please try again"   
+                    </div>
+            </ng-template>
+    
+    
